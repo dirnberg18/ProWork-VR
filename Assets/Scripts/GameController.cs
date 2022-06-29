@@ -64,8 +64,12 @@ public class GameController : MonoBehaviour
     public TextMeshProUGUI scoreText;
     public GameObject startButton;
 
+    private void Start()
+    {
+        StartFunction();
+    }
 
-    void StartButtonFunction(){
+    void StartFunction(){
         score = 0;
         foreach(Transform item in SpawnPoints){
             SpawnPointList.Add(item.localPosition);
@@ -111,7 +115,7 @@ public class GameController : MonoBehaviour
         }
     }
 
-    void DestroyFlower(GameObject _flower){
+    public void DestroyFlower(GameObject _flower){
         SpawnPointList.Add(_flower.transform.localPosition);
         FlowersInScene.Remove(_flower);
         Destroy(_flower);
