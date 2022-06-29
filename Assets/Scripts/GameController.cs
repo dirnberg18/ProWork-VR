@@ -1,3 +1,4 @@
+using Random=UnityEngine.Random;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,27 +10,123 @@ using UnityEngine.SceneManagement;
 public class GameController : MonoBehaviour
 {
     // public variables
-    public static GameController instance; //Singelton to call it somewhere else
-    public GameObject UIElements;
-    public TMP_Text flowerCounter;
-    public bool gamePlaying { get; private set; } //safety meassure, we don't want to be able to change something when the game is over
-    public float timeRemaining;
-    public bool timerIsRunning = false;
+    //public static GameController instance; //Singelton to call it somewhere else
+    //public GameObject UIElements;
+    //public TMP_Text flowerCounter;
+    //public bool gamePlaying { get; private set; } //safety meassure, we don't want to be able to change something when the game is over
+    //public float timeRemaining;
+    //public bool timerIsRunning = false;
     //public float timeRemaining2; //only for testing winning screen 
-    private bool timerIsRunning2 = false; //only for testing winning screen
-    public TMP_Text timeText;
+    //private bool timerIsRunning2 = false; //only for testing winning screen
+    //public TMP_Text timeText;
     //public Button startButton;
     //public GameObject gameOverPanel, introscreen1, introscreen2, winPanel;
 
     // private variables
-    private int numTotalFlowers, numPickedFlowers;
+    //private int numTotalFlowers, numPickedFlowers;
 
-    private void Awake() // called a little before Start() function
-    {
-        instance = this; //in other Scripts we can call GameController.instance
+    public static GameController instance;
+
+    private void Awake(){
+        if(instance == null){
+            instance = this;
+            DontDestroyOnLoad(this.gameObject);
+        }
+        else{
+            Destroy(this.gameObject);
+        }
     }
 
-    private void Start()
+[Header("SpawnPoint Variables")]
+    public Transform SpawnPoints;
+
+    public List<Vector3> SpawnPointList = new List<Vector3>();
+
+[Header("Flower Variables")]
+    public GameObject flowerPrefab;
+
+    public List<GameObject> FlowersInScene = new List<GameObject>();
+
+    public Transform playerVR; 
+
+    int score;
+    
+    [Header("Timer Variables")]
+    float timer;
+    bool canCount = false;
+    int minutes;
+    int seconds;
+    string timeStr;
+    float durationFlower = 3f;
+
+    [Header("UIVariable")]
+    public TextMeshProUGUI timeText;
+    public TextMeshProUGUI scoreText;
+    public GameObject startButton;
+
+
+    void StartButtonFunction(){
+        score = 0;
+        foreach(Transform item in SpawnPoints){
+            SpawnPointList.Add(item.localPosition);
+        }
+        
+        timer = 60f;
+        canCount = true;
+        timeText.text = " 1 : 00 ";
+        scoreText.text = "0";
+        InvokeRepeating("GetFlower", 1f, durationFlower);
+    }
+
+    private void Update(){
+            if(timer > 0.0f && canCount){
+                timer -= Time.deltaTime;
+                minutes = Mathf.FloorToInt(timer/60f);
+                seconds = Mathf.FloorToInt(timer - minutes *60);
+                timeStr = string.Format("{0:0}:{1:00}", minutes,seconds);
+                timeText.text = timeStr;
+            }
+            else if(timer <= 0.0f && canCount){
+                Finish();
+            }
+    }
+
+    void Finish(){
+        canCount = false;
+        timeText.text = "0 : 00";
+    }
+
+    void GetFlower(){
+        if(SpawnPointList.Count > 0){
+            Vector3 randomPosition = SpawnPointList[Random.Range(0, SpawnPointList.Count)];
+            SpawnPointList.Remove(randomPosition);
+
+            GameObject currentFlower = Instantiate(flowerPrefab,randomPosition,Quaternion.identity,transform);
+            currentFlower.transform.LookAt(new Vector3(playerVR.position.x,playerVR.transform.position.y,playerVR.position.z));
+            currentFlower.SetActive(true);
+            FlowersInScene.Add(currentFlower);
+        }
+        else{
+            Debug.Log("Reach Max Flowers");
+        }
+    }
+
+    void DestroyFlower(GameObject _flower){
+        SpawnPointList.Add(_flower.transform.localPosition);
+        FlowersInScene.Remove(_flower);
+        Destroy(_flower);
+        score+= 10;
+        scoreText.text = score.ToString();
+        
+        if(durationFlower<= 0.6f){
+            durationFlower -= 0.1f; 
+        }
+    }
+    }
+
+
+
+    /*private void Start()
     {
         numTotalFlowers = 500;
         numPickedFlowers = 0;
@@ -46,7 +143,7 @@ public class GameController : MonoBehaviour
         //Button btn = startButton.GetComponent<Button>();
         //btn.onClick.AddListener(BeginGame);
         // BeginGame(); //Should be called in On Click, WAR VORHER SCHON AUS
-    }
+    }*/
 
    /* private void BeginGame()
     {
@@ -57,7 +154,7 @@ public class GameController : MonoBehaviour
         introscreen1.SetActive(false);
         introscreen2.SetActive(false);
     }*/
-
+/*
     void Update()
     {
         if (timerIsRunning)
@@ -74,7 +171,7 @@ public class GameController : MonoBehaviour
                 Debug.Log("Time has run out!");
                 //GameOver();
             }
-        }
+        }*/
 
        /* if (timerIsRunning2)
         {
@@ -89,7 +186,7 @@ public class GameController : MonoBehaviour
                 timerIsRunning2 = false;
                 //WonGame();
             }
-        }*/
+        }
     }
 
     void DisplayTime(float timeToDisplay)
@@ -107,7 +204,7 @@ public class GameController : MonoBehaviour
         numPickedFlowers++;
         string flowerCounterStr = "Flower: " + numPickedFlowers + " / " + numTotalFlowers;
         flowerCounter.GetComponent<TMP_Text>().text = flowerCounterStr;
-    }
+    }*/
 
     /*private void GameOver()
     {
@@ -138,5 +235,5 @@ public class GameController : MonoBehaviour
     /*public void OnButtonLoadLevel(string levelToLoad)
     {
         SceneManager.LoadScene(levelToLoad);
-    }*/
-}
+    }
+}*/
