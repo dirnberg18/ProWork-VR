@@ -16,7 +16,7 @@ public class GameController : MonoBehaviour
     public float timeRemaining;
     public bool timerIsRunning = false;
     //public float timeRemaining2; //only for testing winning screen 
-    private bool timerIsRunning2 = false; //only for testing winning screen
+    //private bool timerIsRunning2 = false; //only for testing winning screen
     public TMP_Text timeText;
     //public Button startButton;
     //public GameObject gameOverPanel, introscreen1, introscreen2, winPanel;
@@ -36,7 +36,7 @@ public class GameController : MonoBehaviour
         flowerCounter.GetComponent<TMP_Text>().text = "Points: " + numPickedFlowers; //flowerCounter.GetComponent<TMP_Text>().text = "Flowers: " + numPickedFlowers + " / "+ numTotalFlowers;
 
         timerIsRunning = true;
-        timerIsRunning2 = true;
+        //timerIsRunning2 = true;
         gamePlaying = true;
 
 
@@ -48,15 +48,15 @@ public class GameController : MonoBehaviour
         // BeginGame(); //Should be called in On Click, WAR VORHER SCHON AUS
     }
 
-   /* private void BeginGame()
-    {
-        Debug.Log("You have clicked the button!");
-        timerIsRunning = true;
-        timerIsRunning2 = true;
-        gamePlaying = true;
-        introscreen1.SetActive(false);
-        introscreen2.SetActive(false);
-    }*/
+    /* private void BeginGame()
+     {
+         Debug.Log("You have clicked the button!");
+         timerIsRunning = true;
+         timerIsRunning2 = true;
+         gamePlaying = true;
+         introscreen1.SetActive(false);
+         introscreen2.SetActive(false);
+     }*/
 
     void Update()
     {
@@ -76,20 +76,20 @@ public class GameController : MonoBehaviour
             }
         }
 
-       /* if (timerIsRunning2)
-        {
-            if (timeRemaining2 > 0)
-            {
-                timeRemaining2 -= Time.deltaTime;
-            }
-            else
-            {
-                Debug.Log("Congratulation, you won!");
-                timeRemaining2 = 0;
-                timerIsRunning2 = false;
-                //WonGame();
-            }
-        }*/
+        /* if (timerIsRunning2)
+         {
+             if (timeRemaining2 > 0)
+             {
+                 timeRemaining2 -= Time.deltaTime;
+             }
+             else
+             {
+                 Debug.Log("Congratulation, you won!");
+                 timeRemaining2 = 0;
+                 timerIsRunning2 = false;
+                 //WonGame();
+             }
+         }*/
     }
 
     void DisplayTime(float timeToDisplay)
@@ -105,7 +105,7 @@ public class GameController : MonoBehaviour
     public void PickFlower()
     {
         numPickedFlowers++;
-        string flowerCounterStr = "Flower: " + numPickedFlowers + " / " + numTotalFlowers;
+        string flowerCounterStr = "Flower: " + numTotalFlowers;
         flowerCounter.GetComponent<TMP_Text>().text = flowerCounterStr;
     }
 

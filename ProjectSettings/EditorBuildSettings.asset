@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/GameManager.unity
+    guid: 5e128506b83f7634cbc544bbd7238b1a
+  - enabled: 0
     path: Assets/AutoHand/Examples/Scenes/Oculus Integration/Demo.unity
     guid: f077d52fe9b27704b9cfab692a674a7a
   m_configObjects:
